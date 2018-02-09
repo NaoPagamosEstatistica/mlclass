@@ -1,34 +1,60 @@
 import pandas as pd
 from math import isnan
 
-def getMedian(array):
+def getMedianFromArray(array):
     if (len(array) % 2):
         return(array[len(array) // 2])
     else:
         return((array[len(array) // 2] + array[len(array) // 2 - 1]) / 2)
 
-def playWithAverages(data, cols):
-    average, median, maximum, minimum = {}, {}, {}, {}
+def getMedian(data, cols):
+    median = {}
     for i in cols:
-        a, validValues, values = 0, [], 0
+        validValues, values = [], 0
+        for j in data[i]:
+            if (not isnan(j)):
+                validValues += [j]
+                values += 1
+        median[i] = getMedianFromArray(validValues)
+    return(median)
+
+def getAverage(data, cols):
+    average = {}
+    for i in cols:
+        a, values = 0, 0
         for j in data[i]:
             if (not isnan(j)):
                 a += j
                 values += 1
-                validValues += [j]
-        median[i] = getMedian(validValues)
-        a /= values
-        average[i] = a
-        maximum[i] = max(validValues)
-        minimum[i] = min(validValues)
-    print(maximum)
+        average[i] = a / values
+    return(average)
 
+def getMinMax(data, cols):
+    minimum, maximum = {}, {}
     for i in cols:
+        validValues = []
+        for j in data[i]:
+            if (not isnan(j)):
+                validValues += [j]
+        minimum[i] = min(validValues)
+        maximum[i] = max(validValues)
+    return(minimum, maximum)
+
+def normalize(data, cols):
+    minimum, maximum = getMinMax(data, cols)
+    for i in cols:
+        for j in range(len(data[i])):
+            #data.set_value(j, i, (data[i][j] - minimum[i]) / (maximum[i] - minimum[i]))
+            data.set_value(j, i, (data[i][j]) / (maximum[i]))
+
+def fixFile(data, cols):
+    average = getAverage(data, cols)
+    median = getMedian(data, cols)
+    minimum, maximum = getMinMax(data, cols)
+    for i in cols: # Put values
         for j in range(len(data[i])):
             if (isnan(data[i][j])):
                 data.set_value(j, i, median[i])
-                #data[i][j] = median[i]
-            data.set_value(j, i, (data[i][j] - minimum[i]) / (maximum[i] - minimum[i]))
 
 def removeRows(data, cols):
     removed = {}
@@ -42,10 +68,13 @@ def removeRows(data, cols):
                 #removeRows(data, cols)
     return(data)
 
-data = pd.read_csv('diabetes_dataset.csv').astype('float')
-cols = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness',
-                'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age']
+cols = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age']
+dataSet = pd.read_csv('diabetes_dataset.csv').astype('float')
+fixFile(dataSet, cols)
+normalize(dataSet, cols)
+dataSet.to_csv("diabetes_medianNormByMax_dataset.csv", index=False)
 
-data = removeRows(data, cols)
-print(data)
-data.to_csv("diabetes_removeAllInvalidRows_dataset.csv")
+dataApp = pd.read_csv('diabetes_app.csv').astype('float')
+normalize(dataApp, cols)
+print(dataApp)
+dataApp.to_csv("diabetes_app_NormByMax.csv", index=False)
