@@ -44,8 +44,8 @@ def normalize(data, cols):
     minimum, maximum = getMinMax(data, cols)
     for i in cols:
         for j in range(len(data[i])):
-            #data.set_value(j, i, (data[i][j] - minimum[i]) / (maximum[i] - minimum[i]))
-            data.set_value(j, i, (data[i][j]) / (maximum[i]))
+            data.set_value(j, i, (data[i][j] - minimum[i]) / (maximum[i] - minimum[i]))
+            #data.set_value(j, i, (data[i][j]) / (maximum[i]))
 
 def fixFile(data, cols):
     average = getAverage(data, cols)
@@ -68,13 +68,13 @@ def removeRows(data, cols):
                 #removeRows(data, cols)
     return(data)
 
-cols = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age']
-dataSet = pd.read_csv('diabetes_dataset.csv').astype('float')
+cols = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'Age']
+dataSet = pd.read_csv('diabetes_average_dataset_NoPedi.csv').astype('float')
 fixFile(dataSet, cols)
 normalize(dataSet, cols)
-dataSet.to_csv("diabetes_medianNormByMax_dataset.csv", index=False)
+dataSet.to_csv("diabetes_average_dataset_NoPedi_NormByMinMax.csv", index=False)
 
-dataApp = pd.read_csv('diabetes_app.csv').astype('float')
+dataApp = pd.read_csv('diabetes_app_NoPedi.csv').astype('float')
 normalize(dataApp, cols)
 print(dataApp)
-dataApp.to_csv("diabetes_app_NormByMax.csv", index=False)
+dataApp.to_csv("diabetes_app_NoPedi_NormByMinMax.csv", index=False)
