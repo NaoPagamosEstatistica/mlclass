@@ -1,7 +1,9 @@
 import os
 import subprocess
-from math import randint
+from random import randint
 os.system("g++ hillClimb.cpp -o test")
 
-phi, theta = [], []
-subprocess.check_output(["./test", phi, theta])
+args = [90, 90, 90, 90, 90, 90]
+args = list(map(str, args))
+result = subprocess.check_output(["./test", *args])
+print(result)
