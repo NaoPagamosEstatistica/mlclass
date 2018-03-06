@@ -4,6 +4,12 @@ using namespace std;
 int DEBUG = 0, kNeighbors, radious, kStuck;
 vector<vector<int> > nb; vector<int> aux = {0, 0, 0, 0, 0, 0};
 
+void printVector(vector<int> a)
+{
+	for (int i = 0; i < 6; i ++)
+		printf("%d%s", a[i], i < 6 - 1 ? " " : "\0");
+}
+
 int randInt()
 {
 	int rr = (next() % (2*radious + 1)) - radious;
@@ -47,31 +53,37 @@ double simulate(int phi[], int theta[])
 	return(gg);
 }
 
-int gain(vector<int> x)
+double gain(vector<int> x)
 {
 	int phi[3] = {x[0], x[2], x[4]};
 	int theta[3] = {x[1], x[3], x[5]};
 	return(simulate(phi, theta));
 }
 
-void hillClimb(vector<int> startNode)
+vector<int> hillClimb(vector<int> startNode)
 {
 	vector<int> currNode = startNode; int stuck = 0;
 	while (1)
 	{
 		neighbors(currNode);
-		int nextEval = -(1 << 20);
+		double nextEval = -(1 << 20);
 		vector<int> nextNode = aux;
 		for (auto x: nb)
 		{
-			int result = gain(x);
+			double result = gain(x);
 			if (result > nextEval)
 			{
 				nextNode = x;
 				nextEval = result;
 			}
 		}
-		if (DEBUG) printf("Now: %d, Best: %d\n", nextEval, gain(currNode));
+		if (DEBUG)
+		{
+			printf("Now: %.20lg <- ", nextEval);
+			printVector(nextNode);
+			printf("; Best: %.20lg <- ", gain(currNode));
+			printVector(currNode); printf("\n");
+		}
 		if (nextEval <= gain(currNode))
 			stuck ++;
 		else
@@ -80,7 +92,7 @@ void hillClimb(vector<int> startNode)
 			currNode = nextNode;
 		}
 		if (stuck == kStuck)
-			break;
+			return(currNode);
 	}
 }
 
@@ -96,9 +108,14 @@ int main(int argc, char **argv)
 		//scanf("%d %d", &phi[i], &theta[i]);
 		//printf("%d %d\n", phi[i], theta[i]);
 	}
-	double result = simulate(phi, theta);
+	DEBUG = atoi(argv[7]);
+	kNeighbors = atoi(argv[8]);
+	radious = atoi(argv[9]);
+	kStuck = atoi(argv[10]);
+	//double result = simulate(phi, theta);
 	start = {phi[0], theta[0], phi[1], theta[1], phi[2], theta[2]};
-	hillClimb(start);
-	
+	vector<int> ans = hillClimb(start);
+	printVector(ans); printf(" -> %.20lg\n", gain(ans));
+
 	return(0);
 }
