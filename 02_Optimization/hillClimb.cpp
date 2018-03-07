@@ -115,7 +115,11 @@ int main(int argc, char **argv)
 	//double result = simulate(phi, theta);
 	start = {phi[0], theta[0], phi[1], theta[1], phi[2], theta[2]};
 	vector<int> ans = hillClimb(start);
+<<<<<<< HEAD
 	printVector(ans); printf(" -> %.20lg\n", gain(ans));
+=======
+	printf("%.20lg -> ", gain(ans)); printVector(ans); printf("\n");
+>>>>>>> cc7791fb0c354a759702f3448a3bec3b4b068a95
 
 	return(0);
 }

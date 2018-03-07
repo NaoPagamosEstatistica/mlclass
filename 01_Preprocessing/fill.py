@@ -69,12 +69,12 @@ def removeRows(data, cols):
     return(data)
 
 cols = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'Age']
-dataSet = pd.read_csv('diabetes_average_dataset_NoPedi.csv').astype('float')
+dataSet = pd.read_csv('diabetes_LinearRegression_dataset.csv').astype('float')
 fixFile(dataSet, cols)
 normalize(dataSet, cols)
-dataSet.to_csv("diabetes_average_dataset_NoPedi_NormByMinMax.csv", index=False)
+dataSet.to_csv("diabetes_LinearRegression_dataset_NormByMinMax.csv", index=False)
 
-dataApp = pd.read_csv('diabetes_app_NoPedi.csv').astype('float')
-normalize(dataApp, cols)
-print(dataApp)
-dataApp.to_csv("diabetes_app_NoPedi_NormByMinMax.csv", index=False)
+# dataApp = pd.read_csv('diabetes_app_NoPedi.csv').astype('float')
+# normalize(dataApp, cols)
+# print(dataApp)
+# dataApp.to_csv("diabetes_app_NoPedi_NormByMinMax.csv", index=False)
