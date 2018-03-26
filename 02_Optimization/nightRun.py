@@ -19,7 +19,7 @@ def treatRes(res):
     return(str(s))
 
 def runHill(args, radio):
-    result = subprocess.check_output(["./test", *args, "0", "1000000", str(radio), "20"])
+    result = subprocess.check_output(["./test", *args, "0", "1000", str(radio), "20"])
     result = treatRes(result)
     lol = result.split(' ')
     #print(lol)
