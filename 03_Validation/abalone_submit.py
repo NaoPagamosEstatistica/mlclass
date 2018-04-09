@@ -1,14 +1,4 @@
-SEND = 1
-
-"""
-Atividade para trabalhar o pré-processamento dos dados.
-
-Criação de modelo preditivo para diabetes e envio para verificação de peformance
-no servidor.
-
-@author: Aydano Machado <aydano.machado@gmail.com>
-"""
-
+import json
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LinearRegression
@@ -37,10 +27,10 @@ model.fit(X, y)
 print(' - Aplicando modelo e enviando para o servidor')
 data_app = pd.read_csv('abalone_app_sexAsNum.csv')
 y_pred = model.predict(data_app)
-print(pd.Series(y_pred).to_json(orient='values'))
+#print(pd.Series(y_pred).to_json(orient='values'))
 
 # Enviando previsões realizadas com o modelo para o servidor
-URL = "http://aydanomachado.com/mlclass/03_Validation.php"
+URL = "https://aydanomachado.com/mlclass/03_Validation.php"
 
 #TODO Substituir pela sua chave aqui
 DEV_KEY = "Não pagamos estatística"
@@ -50,8 +40,8 @@ data = {'dev_key':DEV_KEY,
         'predictions':pd.Series(y_pred).to_json(orient='values')}
 
 # Enviando requisição e salvando o objeto resposta
-if (SEND): r = requests.post(url = URL, data = data)
+r = requests.post(url = URL, data = data)
 
 # Extraindo e imprimindo o texto da resposta
-if (SEND): pastebin_url = r.text
-if (SEND): print(" - Resposta do servidor:\n", r.text, "\n")
+pastebin_url = r.text
+print(" - Resposta do servidor:\n", r.text, "\n")
