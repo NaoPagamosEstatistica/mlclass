@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier, NearestCentroid
+from sklearn.decomposition import PCA
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split, cross_val_score, cross_validate, cross_val_predict
 from sklearn import metrics, datasets, preprocessing, linear_model, tree, naive_bayes, svm, neural_network
@@ -18,15 +19,13 @@ def tryModels(model, toDo, scoring, X, y):
     for i in range(len(model)):
         if (not toDo[i]): continue
         print("\n", model[i].__class__.__name__)
-        for j in range(1, 100):
-            model[i] = KNeighborsClassifier(n_neighbors=j)
-            model[i].fit(X, y)
-            scores = cross_validate(model[i], X, y, scoring=scoring, cv=10, return_train_score=True)
-            score_predict = cross_val_predict(model[i], X, y, cv=10)
-            now = printScore(scores, y, score_predict)
-            if (now > best[0]):
-                best[0] = now
-                best[1] = j#model[i].__class__.__name__
+        model[i].fit(X, y)
+        scores = cross_validate(model[i], X, y, scoring=scoring, cv=10, return_train_score=True)
+        score_predict = cross_val_predict(model[i], X, y, cv=10)
+        now = printScore(scores, y, score_predict)
+        if (now > best[0]):
+            best[0] = now
+            best[1] = model[i].__class__.__name__
     return(best)
 
 def testColCombination(model, toDo, socring, data, feature_cols):
@@ -56,7 +55,7 @@ data = pd.read_csv('abalone_dataset_sexAsNum.csv')
 
 print(' - Criando modelo preditivo')
 model = [KNeighborsClassifier(n_neighbors=19), NearestCentroid(), linear_model.SGDClassifier(loss="hinge", penalty="l2"), tree.DecisionTreeClassifier(), naive_bayes.GaussianNB(), svm.LinearSVC(), neural_network.MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5,2), random_state=1)]
-toDo = [1, 0, 0, 0, 0, 0, 0]
+toDo = [1, 1, 1, 1, 1, 1, 1]
 
 print(' - Criando X e y para o algoritmo de aprendizagem a partir do arquivo diabetes_dataset')
 feature_cols = ['sex', 'length', 'diameter', 'height',
@@ -65,6 +64,11 @@ feature_cols = ['sex', 'length', 'diameter', 'height',
 
 X = data[feature_cols]
 y = data.type
+
+pca = PCA(n_components=2)
+pca.fit(X)
+X = pca.transform(X)
+
 bfile = open("best", "w")
 print(testColCombination(model, toDo, scoring, data, feature_cols), file=bfile)
 bfile.close()

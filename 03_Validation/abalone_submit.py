@@ -13,20 +13,19 @@ data = pd.read_csv('abalone_dataset_sexAsNum.csv')
 # Criando X and y par ao algorítmo de aprendizagem de máquina.
 print(' - Criando X e y para o algoritmo de aprendizagem a partir do arquivo diabetes_dataset')
 # Caso queira modificar as colunas consideradas basta algera o array a seguir.
-feature_cols = ['sex', 'length', 'diameter', 'height',
-                'whole_weight', 'shucked_weight', 'viscera_weight', 'shell_weight']
+feature_cols = ['length', 'diameter', 'whole_weight', 'shucked_weight', 'shell_weight']
 X = data[feature_cols]
 y = data.type
 
 # Ciando o modelo preditivo para a base trabalhada
 print(' - Criando modelo preditivo')
-model = KNeighborsClassifier(n_neighbors=19)
+model = KNeighborsClassifier(n_neighbors=74)
 model.fit(X, y)
 
 #realizando previsões com o arquivo de
 print(' - Aplicando modelo e enviando para o servidor')
 data_app = pd.read_csv('abalone_app_sexAsNum.csv')
-y_pred = model.predict(data_app)
+y_pred = model.predict(data_app[feature_cols])
 #print(pd.Series(y_pred).to_json(orient='values'))
 
 # Enviando previsões realizadas com o modelo para o servidor
