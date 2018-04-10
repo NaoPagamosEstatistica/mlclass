@@ -65,5 +65,7 @@ feature_cols = ['sex', 'length', 'diameter', 'height',
 
 X = data[feature_cols]
 y = data.type
-print(testColCombination(model, toDo, scoring, data, feature_cols))
+bfile = open("best", "w")
+print(testColCombination(model, toDo, scoring, data, feature_cols), file=bfile)
+bfile.close()
 # 19
