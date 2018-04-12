@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split, cross_val_score, cross_validate, cross_val_predict
-from sklearn import metrics, datasets
+from sklearn import metrics, datasets, svm
 from sklearn.metrics import recall_score
 import requests
 
@@ -19,7 +19,7 @@ y = data.type
 
 # Ciando o modelo preditivo para a base trabalhada
 print(' - Criando modelo preditivo')
-model = KNeighborsClassifier(n_neighbors=74)
+model = svm.LinearSVC()#KNeighborsClassifier(n_neighbors=74)
 model.fit(X, y)
 
 #realizando previsões com o arquivo de
@@ -42,5 +42,5 @@ data = {'dev_key':DEV_KEY,
 r = requests.post(url = URL, data = data)
 
 # Extraindo e imprimindo o texto da resposta
-pastebin_url = r.text
 print(" - Resposta do servidor:\n", r.text, "\n")
+pastebin_url = r.text
