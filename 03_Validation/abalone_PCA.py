@@ -30,7 +30,7 @@ def tryModels(model, toDo, scoring, X, y):
 
 def testColCombination(model, toDo, socring, data, feature_cols):
     best = [0, 0, 0]
-    for i in range(54, 2**len(feature_cols)):
+    for i in range(1, 2**len(feature_cols)):
         rep = bin(i)[2:]
         rep = '0' * (len(feature_cols) - len(rep)) + rep
         newCols = []
@@ -53,24 +53,23 @@ scoring = ['precision_macro', 'recall_macro']
 print('\n - Lendo o arquivo com o dataset sobre diabetes')
 data = pd.read_csv('abalone_dataset_sexAsNum.csv')
 
+qq = 8
+
 print(' - Criando modelo preditivo')
-model = [KNeighborsClassifier(n_neighbors=19), NearestCentroid(), linear_model.SGDClassifier(loss="hinge", penalty="l2"), tree.DecisionTreeClassifier(), naive_bayes.GaussianNB(), svm.LinearSVC(), neural_network.MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5,2), random_state=1)]
-toDo = [0, 0, 0, 0, 0, 1, 0]
+model = [KNeighborsClassifier(n_neighbors=19), NearestCentroid(), linear_model.SGDClassifier(loss="hinge", penalty="l2"), tree.DecisionTreeClassifier(), naive_bayes.GaussianNB(), svm.LinearSVC(), neural_network.MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1, max_iter=200)]
+toDo = [0, 0, 0, 0, 0, 0, 1]
 
 print(' - Criando X e y para o algoritmo de aprendizagem a partir do arquivo diabetes_dataset')
-feature_cols = ['length', 'whole_weight', 'shucked_weight', 'viscera_weight']
-#['sex', 'length', 'diameter', 'height',
-                #'whole_weight', 'shucked_weight', 'viscera_weight', 'shell_weight']
-
+feature_cols = ['sex', 'length', 'diameter', 'height', 'whole_weight', 'shucked_weight', 'viscera_weight', 'shell_weight']
 
 X = data[feature_cols]
 y = data.type
 
-#pca = PCA(n_components=2)
-#pca.fit(X)
-#X = pca.transform(X)
+pca = PCA(n_components=qq)
+pca.fit(X)
+X = pca.transform(X)
 
 bfile = open("best", "w")
-print(tryModels(model, toDo, scoring, X, y))
+print(tryModels(model, toDo, scoring, X, y), file=bfile)
 bfile.close()
 # 19
