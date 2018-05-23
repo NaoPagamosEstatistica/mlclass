@@ -1,0 +1,25 @@
+V^pi estimation:
+Inicializar:
+  π ← política a ser avaliada
+  V ← uma função valor-estado arbitrária
+Retornos(s) ← uma lista vazia, para todo s ∈ S
+Repetir sempre:
+  Gerar um episódio usando π
+  Para cada estado s que aparece no episódio:
+    R ← quantidade de retorno após a primeira ocorrência de s
+    Adiciona R à lista Retornos(s)
+    V (s) ← média de Retornos(s)
+
+Exploration:
+Inicializa, para todo s ∈ S e a ∈ A(s):
+  Q(s, a) ← de forma arbitrária
+  π(s) ← de forma arbitrária
+  Retorno(s, a) ← lista vazia para cada s ∈ S
+Repetir infinitamente:
+  Gerar um episódio usando π com par (s, a) inicial tomado aleatoriamente
+  Para cada par (s, a) gerado no episódio:
+  R ← retorno após a primeira ocorrência de (s, a)
+  Adiciona R a lista Retorno(s, a)
+  Q(s, a) ← média de Retorno(s, a)
+  Para cada s do episódio:
+    π(s) ← arg max a∈A(s) Q(s, a)

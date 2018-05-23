@@ -1,0 +1,11 @@
+Seja π a política a ser avaliada
+Inicializar V (s) de forma arbitrária
+Repete (para cada episódio):
+  Inicializar s
+  Repete (para cada passo do episódio):
+    a ← ação dada por π para s
+    Implementar a ação a
+    Observar o retorno r e o próximo estado s′
+    V (s) ← V (s) + α[r + γV (s′) − V (s)]
+    s ← s′
+Até s ser um estado terminal
